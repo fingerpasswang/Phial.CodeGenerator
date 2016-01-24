@@ -1,0 +1,11 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Auto.Server;
+using DataAccess;
+using System.Linq;
+
+namespace Auto.DataAccess
+{{
+	{0}
+}}

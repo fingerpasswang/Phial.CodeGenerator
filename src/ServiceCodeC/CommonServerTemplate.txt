@@ -1,0 +1,19 @@
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using RPCBase;
+using RPCBase.Server;
+
+namespace Auto.Server
+{{
+	{0}
+
+	public static class ServiceVersionMeta
+	{{
+		public static string GetServiceVersion()
+		{{
+			return "{1}";
+		}}
+	}}
+}}

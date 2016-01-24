@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using RPCBase;
+using SerializeBase;
+
+namespace Auto.Server
+{{
+	{0}
+
+	public static class ModelVersionMeta
+	{{
+		public static string GetModelVersion()
+		{{
+			return "{1}";
+		}}
+	}}
+}}
