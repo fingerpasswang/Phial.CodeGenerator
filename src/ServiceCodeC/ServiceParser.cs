@@ -33,17 +33,17 @@ namespace ServiceCodeC
             return ServiceType.None;
         }
 
-        ServiceScope ServiceNameToEnum(string typeName)
+        ServiceScope ServiceNameToEnum(Attribute serviceAttr)
         {
-            if (typeName.StartsWith("IClient"))
-            {
-                return ServiceScope.ServerToClient;
-            }
-            if (typeName.EndsWith("ClientService"))
-            {
-                return ServiceScope.ClientToServer;
-            }
-            return ServiceScope.InterServer;
+            //if (typeName.StartsWith("IClient"))
+            //{
+            //    return ServiceScope.ServerToClient;
+            //}
+            //if (typeName.EndsWith("ClientService"))
+            //{
+            //    return ServiceScope.ClientToServer;
+            //}
+            return (ServiceScope)serviceAttr.GetType().GetProperty("ServiceScope").GetValue(serviceAttr, null);
         }
 
         string TypeNameToName(string typeName, Type type)
@@ -53,7 +53,7 @@ namespace ServiceCodeC
                 return typeName.Substring(1, typeName.LastIndexOf("Notify")-1);
             }
             
-            return typeName.Substring(1, typeName.LastIndexOf("Service") - 1);
+            return typeName.Substring(1);
         }
 
         ServiceMeta ServiceToMeta(Type type, int pos)
@@ -61,10 +61,17 @@ namespace ServiceCodeC
             var test = type.GetCustomAttributes();
             var serviceAttr = type.GetCustomAttributes()
                 .FirstOrDefault(attr => attr.GetType().BaseType?.Name == "ServiceAttribute" || attr.GetType().Name == "ServiceAttribute");
+            var divisionalAttr = type.GetCustomAttributes()
+                .FirstOrDefault(attr => attr.GetType().Name == "DivisionalAttribute");
+            var divisional = true;
 
             if (serviceAttr == null)
             {
                 return null;
+            }
+            if (divisionalAttr != null)
+            {
+                divisional = (bool) divisionalAttr.GetType().GetProperty("Divisional").GetValue(divisionalAttr, null);
             }
 
             var typeName = type.Name;
@@ -74,8 +81,8 @@ namespace ServiceCodeC
                 Id = (uint)pos+1,
                 Name = TypeNameToName(typeName, serviceAttr.GetType()),
                 Type = ServiceTypeToEnum(serviceAttr.GetType()),
-                Scope = ServiceNameToEnum(typeName),
-                Divisional = (bool)serviceAttr.GetType().GetProperty("Divisional").GetValue(serviceAttr, null),
+                Scope = ServiceNameToEnum(serviceAttr),
+                Divisional = divisional,
                 Multicast = serviceAttr.GetType().Name.Equals("SyncAttribute") && (bool)serviceAttr.GetType().GetProperty("Multicast").GetValue(serviceAttr, null),
             };
 
